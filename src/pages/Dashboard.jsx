@@ -10,6 +10,20 @@ function Dashboard() {
 
    const token = localStorage.getItem("token");
 
+   const fetchDashboard = async () => {
+      const res = await api.get("/alerts/dashboard", {
+         headers: { Authorization: `Bearer ${token}` }
+      });
+      setStats(res.data);
+   };
+
+   const fetchAlerts = async () => {
+      const res = await api.get("/alerts", {
+         headers: { Authorization: `Bearer ${token}` }
+      });
+      setAlerts(res.data);
+   };
+
    useEffect(() => {
       fetchDashboard();
       fetchAlerts();
@@ -25,20 +39,6 @@ function Dashboard() {
 
       return () => socket.off("newAlert");
    }, []);
-
-   const fetchDashboard = async () => {
-      const res = await api.get("/alerts/dashboard", {
-         headers: { Authorization: `Bearer ${token}` }
-      });
-      setStats(res.data);
-   };
-
-   const fetchAlerts = async () => {
-      const res = await api.get("/alerts", {
-         headers: { Authorization: `Bearer ${token}` }
-      });
-      setAlerts(res.data);
-   };
 
    const getSeverityColor = (severity) => {
       if (severity === "CRITICAL") return "#ff3b3b";
@@ -81,7 +81,6 @@ function Dashboard() {
             </div>
          )}
 
-         {/* STAT CARDS */}
          <div style={{
             display: "flex",
             gap: 20,
@@ -116,7 +115,6 @@ function Dashboard() {
                {alerts.map(alert => (
                   <tr key={alert._id} style={{ borderBottom: "1px solid #334155" }}>
                      <td style={tdStyle}>{alert.title}</td>
-
                      <td style={{
                         ...tdStyle,
                         color: getSeverityColor(alert.severity),
@@ -124,7 +122,6 @@ function Dashboard() {
                      }}>
                         {alert.severity}
                      </td>
-
                      <td style={{
                         ...tdStyle,
                         color: getStatusColor(alert.status),
@@ -132,7 +129,6 @@ function Dashboard() {
                      }}>
                         {alert.status}
                      </td>
-
                      <td style={tdStyle}>{alert.sourceIP}</td>
                   </tr>
                ))}
@@ -143,7 +139,6 @@ function Dashboard() {
    );
 }
 
-/* STAT CARD */
 function StatCard({ title, value, color = "#38bdf8" }) {
    return (
       <div style={{
@@ -155,10 +150,7 @@ function StatCard({ title, value, color = "#38bdf8" }) {
          boxShadow: "0 0 10px rgba(0,0,0,0.5)"
       }}>
          <h3 style={{ marginBottom: 10 }}>{title}</h3>
-         <h2 style={{
-            color,
-            fontSize: 28
-         }}>
+         <h2 style={{ color, fontSize: 28 }}>
             {value || 0}
          </h2>
       </div>
