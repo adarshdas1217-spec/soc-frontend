@@ -27,6 +27,7 @@ function Dashboard() {
    useEffect(() => {
       fetchDashboard();
       fetchAlerts();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
    useEffect(() => {
@@ -38,6 +39,7 @@ function Dashboard() {
       });
 
       return () => socket.off("newAlert");
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
 
    const getSeverityColor = (severity) => {
